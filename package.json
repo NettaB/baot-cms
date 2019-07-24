@@ -1,0 +1,28 @@
+{
+  "name": "baot-cms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "start:dev": "tsc --watch && node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/NettaB/baot-cms.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NettaB/baot-cms/issues"
+  },
+  "homepage": "https://github.com/NettaB/baot-cms#readme",
+  "dependencies": {
+    "mongodb": "^3.3.0-beta2"
+  },
+  "devDependencies": {
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
+  }
+}
