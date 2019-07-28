@@ -1,9 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var http = require('http');
+var https = require('https');
+var fs = require('fs');
 var urlModule = require('url');
 var router = require('./router');
-var server = http.createServer(function (req, res) {
+var passphrase = require('./https/passphrase');
+var options = {
+    key: fs.readFileSync('./https/key.pem'),
+    cert: fs.readFileSync('./https/cert.pem'),
+    passphrase: passphrase.passphrase
+};
+var server = https.createServer(options, function (req, res) {
     //handle requests
     var url = req.url, method = req.method, headers = req.headers;
     //TODO: validate authToken header

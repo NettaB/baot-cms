@@ -1,10 +1,19 @@
 import { IncomingMessage, ServerResponse } from 'http';
 
-const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const urlModule = require('url');
 const router = require('./router');
+const passphrase = require('./https/passphrase');
 
-const server = http.createServer(
+const options = {
+  key: fs.readFileSync('./https/key.pem'),
+  cert: fs.readFileSync('./https/cert.pem'),
+  passphrase: passphrase.passphrase
+};
+
+const server = https.createServer(
+  options,
   (req: IncomingMessage, res: ServerResponse) => {
     //handle requests
     const { url, method, headers } = req;
