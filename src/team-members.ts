@@ -1,3 +1,7 @@
 import { createOne } from './db';
 
-export const createTeamMember = createOne('team-members');
+const createTeamMember = createOne('team');
+
+module.exports = {
+  create: createTeamMember
+};

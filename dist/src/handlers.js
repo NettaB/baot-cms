@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var teamMembers = require('./team-members');
 var Methods;
 (function (Methods) {
     Methods["post"] = "POST";
@@ -34,6 +35,7 @@ handlers.teamMembers = function (data, callback) {
                     linkedinLink: linkedinLink
                 };
                 console.log('POST', newTeamMember);
+                teamMembers.create(newTeamMember);
                 callback(200, newTeamMember);
             }
             else {

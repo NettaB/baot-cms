@@ -1,5 +1,6 @@
 import { IncomingMessage } from 'http';
 import { TeamMember } from './interfaces';
+const teamMembers = require('./team-members');
 
 enum Methods {
   post = 'POST',
@@ -55,6 +56,7 @@ handlers.teamMembers = (data: Payload, callback) => {
           linkedinLink
         };
         console.log('POST', newTeamMember);
+        teamMembers.create(newTeamMember);
         callback(200, newTeamMember);
       } else {
         callback(400, { Error: 'Missing required fields' });
