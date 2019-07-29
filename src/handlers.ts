@@ -1,5 +1,6 @@
-import { IncomingMessage } from 'http';
 import { TeamMember } from './interfaces';
+
+const uuidv4 = require('uuid/v4');
 const teamMembers = require('./team-members');
 
 enum Methods {
@@ -47,6 +48,7 @@ handlers.teamMembers = (data: Payload, callback) => {
 
       if (firstName && lastName) {
         const newTeamMember = {
+          id: uuidv4(),
           firstName,
           lastName,
           programId,

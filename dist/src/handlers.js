@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var uuidv4 = require('uuid/v4');
 var teamMembers = require('./team-members');
 var Methods;
 (function (Methods) {
@@ -26,6 +27,7 @@ handlers.teamMembers = function (data, callback) {
             var linkedinLink = typeof body.linkedinLink === 'string' ? body.linkedinLink : null;
             if (firstName && lastName) {
                 var newTeamMember = {
+                    id: uuidv4(),
                     firstName: firstName,
                     lastName: lastName,
                     programId: programId,
