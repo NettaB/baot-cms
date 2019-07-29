@@ -17,19 +17,18 @@ var server = https.createServer(options, function (req, res) {
     var parsedUrl = urlModule.parse(url);
     var path = parsedUrl.pathname;
     //TODO: parse the query
-    var dataArray = [];
-    var body;
+    var body = '';
     req.on('data', function (data) {
-        dataArray.push(data);
-        if (dataArray.length > 1e6) {
-            dataArray = [];
+        body += data;
+        if (body.length > 1e6) {
+            body = '';
             res.writeHead(413).end();
             res.connection.destroy();
         }
     });
     var handler = router[path];
     req.on('end', function () {
-        body = Buffer.concat(dataArray).toString();
+        body = JSON.parse(body);
         //TODO: create some predefined payload from req
         var payload = {
             body: body,

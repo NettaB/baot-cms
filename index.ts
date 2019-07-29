@@ -22,12 +22,11 @@ const server = https.createServer(
     const path = parsedUrl.pathname;
     //TODO: parse the query
 
-    let dataArray: any[] = [];
-    let body: any;
+    let body = '';
     req.on('data', (data: Buffer) => {
-      dataArray.push(data);
-      if (dataArray.length > 1e6) {
-        dataArray = [];
+      body += data;
+      if (body.length > 1e6) {
+        body = '';
         res.writeHead(413).end();
         res.connection.destroy();
       }
@@ -36,7 +35,7 @@ const server = https.createServer(
     const handler = router[path];
 
     req.on('end', () => {
-      body = Buffer.concat(dataArray).toString();
+      body = JSON.parse(body);
       //TODO: create some predefined payload from req
       const payload = {
         body,
