@@ -19,12 +19,47 @@ interface Payload {
   searchParams: URLSearchParams;
 }
 
+interface teamMember {
+  firstName: string;
+  lastName: string;
+  programId?: string;
+  title: string;
+  organization: string;
+  linkedinLink?: string;
+  shortBio?: string;
+}
+/*Add Team Member request:
+request payload:
+{
+  firstName: string;
+  lastName: string;
+  programId?: string;
+  title: string;
+  organization: string;
+  linkedinLink?: string;
+  shortBio?: string;
+}
+entity: {
+  id: string;
+  firstName: string;
+  lastName: string;
+  programId: string;
+  programName: string;
+  title: string;
+  organization: string;
+  linkedinLink?: string;
+  shortBio?: string;
+  isProgramManager?: boolean
+}
+*/
+
 const handlers: Handlers = {};
 
 handlers.teamMembers = (data: Payload, callback) => {
   switch (data.method) {
     case Methods.post:
-      console.log('POST', data);
+      const { body } = data;
+      // const firstName = body.firstName && console.log('POST', data);
       console.log(data.searchParams.get('id'));
       //TODO: verify and accept payload
       callback(200, { received: true });
