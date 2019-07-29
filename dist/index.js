@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var https = require('https');
 var fs = require('fs');
-var urlModule = require('url');
 var router = require('./router');
 var passphrase = require('./https/passphrase');
 var options = {
@@ -14,9 +13,14 @@ var server = https.createServer(options, function (req, res) {
     //handle requests
     var url = req.url, method = req.method, headers = req.headers;
     //TODO: validate authToken header
-    var parsedUrl = urlModule.parse(url);
-    var path = parsedUrl.pathname;
-    //TODO: parse the query
+    if (!url) {
+        //TODO: do some error handling on this?
+        return;
+    }
+    //TODO: is this the best way to handle this situation?
+    var urlObject = new URL(url, 'https://localhost');
+    var path = urlObject.pathname;
+    var searchParams = urlObject.searchParams;
     var body = '';
     req.on('data', function (data) {
         body += data;
@@ -32,7 +36,8 @@ var server = https.createServer(options, function (req, res) {
         //TODO: create some predefined payload from req
         var payload = {
             body: body,
-            method: method
+            method: method,
+            searchParams: searchParams
         };
         handler(payload, function (statusCode, payload) {
             payload = typeof payload === 'object' ? payload : {};

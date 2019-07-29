@@ -13,6 +13,7 @@ handlers.teamMembers = (data, callback) => {
   switch (data.method) {
     case 'POST':
       console.log('POST', data);
+      console.log(data.searchParams.get('id'));
       //TODO: verify and accept payload
       callback(200, { received: true });
       break;

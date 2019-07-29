@@ -2,7 +2,6 @@ import { IncomingMessage, ServerResponse } from 'http';
 
 const https = require('https');
 const fs = require('fs');
-const urlModule = require('url');
 const router = require('./router');
 const passphrase = require('./https/passphrase');
 
@@ -18,9 +17,15 @@ const server = https.createServer(
     //handle requests
     const { url, method, headers } = req;
     //TODO: validate authToken header
-    const parsedUrl = urlModule.parse(url);
-    const path = parsedUrl.pathname;
-    //TODO: parse the query
+
+    if (!url) {
+      //TODO: do some error handling on this?
+      return;
+    }
+    //TODO: is this the best way to handle this situation?
+    const urlObject = new URL(url, 'https://localhost');
+    const path = urlObject.pathname;
+    const { searchParams } = urlObject;
 
     let body = '';
     req.on('data', (data: Buffer) => {
@@ -42,7 +47,8 @@ const server = https.createServer(
       //TODO: create some predefined payload from req
       const payload = {
         body,
-        method
+        method,
+        searchParams
       };
       handler(payload, (statusCode, payload) => {
         payload = typeof payload === 'object' ? payload : {};
