@@ -1,17 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var Methods;
+(function (Methods) {
+    Methods["post"] = "POST";
+    Methods["get"] = "GET";
+    Methods["delete"] = "DELETE";
+})(Methods || (Methods = {}));
 var handlers = {};
 handlers.teamMembers = function (data, callback) {
     switch (data.method) {
-        case 'POST':
+        case Methods.post:
             console.log('POST', data);
             console.log(data.searchParams.get('id'));
             //TODO: verify and accept payload
             callback(200, { received: true });
             break;
-        //TODO: handle unsupported methods - 405 error
+        case Methods.get:
+            console.log('GET', data);
+        case Methods.delete:
+            console.log('DELETE', data);
         default:
-            console.log('default', data);
+            console.log('Unsupported method', data.method);
+            callback(405, {});
     }
 };
 module.exports = handlers;
