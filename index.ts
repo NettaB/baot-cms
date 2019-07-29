@@ -32,7 +32,10 @@ const server = https.createServer(
       }
     });
 
-    const handler = router[path];
+    const handler: (
+      payload: object,
+      callback: (statusCode: number, payload: object) => void
+    ) => void = router[path];
 
     req.on('end', () => {
       body = JSON.parse(body);
@@ -41,15 +44,20 @@ const server = https.createServer(
         body,
         method
       };
-      handler(payload);
+      handler(payload, (statusCode, payload) => {
+        payload = typeof payload === 'object' ? payload : {};
+        const stringifiedPayload = JSON.stringify(payload);
+        res.setHeader('Content-Type', 'application/json');
+        res.writeHead(statusCode);
+        res.end(stringifiedPayload);
+      });
     });
+
+    //TODO: where and how are response errors handled?
 
     // res.on('error', err => {
     //   /*some error handling*/
     // });
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.end();
   }
 );
 

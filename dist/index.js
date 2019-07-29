@@ -34,14 +34,18 @@ var server = https.createServer(options, function (req, res) {
             body: body,
             method: method
         };
-        handler(payload);
+        handler(payload, function (statusCode, payload) {
+            payload = typeof payload === 'object' ? payload : {};
+            var stringifiedPayload = JSON.stringify(payload);
+            res.setHeader('Content-Type', 'application/json');
+            res.writeHead(statusCode);
+            res.end(stringifiedPayload);
+        });
     });
+    //TODO: where and how are response errors handled?
     // res.on('error', err => {
     //   /*some error handling*/
     // });
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.end();
 });
 server.listen('8000', function () {
     console.log('server is now listening on port 8000');
