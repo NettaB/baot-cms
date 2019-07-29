@@ -33,7 +33,6 @@ var server = https.createServer(options, function (req, res) {
     var handler = router[path];
     req.on('end', function () {
         body = JSON.parse(body);
-        //TODO: create some predefined payload from req
         var payload = {
             body: body,
             method: method,

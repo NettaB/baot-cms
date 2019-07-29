@@ -31,8 +31,12 @@ handlers.teamMembers = (data: Payload, callback) => {
       break;
     case Methods.get:
       console.log('GET', data);
+      callback(200, { received: true });
+      break;
     case Methods.delete:
       console.log('DELETE', data);
+      callback(200, { received: true });
+      break;
     default:
       console.log('Unsupported method', data.method);
       callback(405, {});

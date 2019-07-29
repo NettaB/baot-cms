@@ -44,7 +44,6 @@ const server = https.createServer(
 
     req.on('end', () => {
       body = JSON.parse(body);
-      //TODO: create some predefined payload from req
       const payload = {
         body,
         method,
