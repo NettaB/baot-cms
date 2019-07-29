@@ -3,12 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var https = require('https');
 var fs = require('fs');
 var router = require('./router');
-var passphrase = require('./https/passphrase');
+var passphrase = require('../https/passphrase');
 var options = {
     key: fs.readFileSync('./https/key.pem'),
     cert: fs.readFileSync('./https/cert.pem'),
     passphrase: passphrase.passphrase
 };
+//TODO: figure out correct config for ./src to translate to dist
 var server = https.createServer(options, function (req, res) {
     //handle requests
     var url = req.url, method = req.method, headers = req.headers;

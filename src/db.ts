@@ -1,11 +1,11 @@
 import { Db } from 'mongodb';
-import { TeamMember, Program } from './db-interfaces';
+import { DBTeamMember, DBProgram } from './interfaces';
 
 const mongo = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017';
 
 export const createOne = (collectionName: string) => (
-  item: TeamMember | Program
+  item: DBTeamMember | DBProgram
 ) => {
   mongo.connect(url, (err: any, client: any) => {
     if (err) {

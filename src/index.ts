@@ -1,9 +1,10 @@
 import { IncomingMessage, ServerResponse } from 'http';
+import { TeamMember } from './interfaces';
 
 const https = require('https');
 const fs = require('fs');
 const router = require('./router');
-const passphrase = require('./https/passphrase');
+const passphrase = require('../https/passphrase');
 
 const options = {
   key: fs.readFileSync('./https/key.pem'),
@@ -11,6 +12,7 @@ const options = {
   passphrase: passphrase.passphrase
 };
 
+//TODO: figure out correct config for ./src to translate to dist
 const server = https.createServer(
   options,
   (req: IncomingMessage, res: ServerResponse) => {

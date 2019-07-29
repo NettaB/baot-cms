@@ -6,42 +6,43 @@ var Methods;
     Methods["get"] = "GET";
     Methods["delete"] = "DELETE";
 })(Methods || (Methods = {}));
-/*Add Team Member request:
-request payload:
-{
-  firstName: string;
-  lastName: string;
-  programId?: string;
-  title: string;
-  organization: string;
-  linkedinLink?: string;
-  shortBio?: string;
-}
-entity: {
-  id: string;
-  firstName: string;
-  lastName: string;
-  programId: string;
-  programName: string;
-  title: string;
-  organization: string;
-  linkedinLink?: string;
-  shortBio?: string;
-  isProgramManager?: boolean
-}
-*/
 var handlers = {};
 handlers.teamMembers = function (data, callback) {
     switch (data.method) {
         case Methods.post:
             var body = data.body;
-            // const firstName = body.firstName && console.log('POST', data);
-            console.log(data.searchParams.get('id'));
-            //TODO: verify and accept payload
-            callback(200, { received: true });
+            var firstName = body.firstName && typeof body.firstName === 'string'
+                ? body.firstName
+                : null;
+            var lastName = body.lastName && typeof body.lastName === 'string'
+                ? body.lastName
+                : null;
+            var programId = typeof body.programId === 'string' ? body.programId : null;
+            var title = typeof body.title === 'string' ? body.title : null;
+            var organization = typeof body.organization === 'string' ? body.organization : null;
+            var shortBio = typeof body.shortBio === 'string' ? body.shortBio : null;
+            //TODO: validate linkedinLink is a url;
+            var linkedinLink = typeof body.linkedinLink === 'string' ? body.linkedinLink : null;
+            if (firstName && lastName) {
+                var newTeamMember = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    programId: programId,
+                    title: title,
+                    organization: organization,
+                    shortBio: shortBio,
+                    linkedinLink: linkedinLink
+                };
+                console.log('POST', newTeamMember);
+                callback(200, newTeamMember);
+            }
+            else {
+                callback(400, { Error: 'Missing required fields' });
+            }
             break;
         case Methods.get:
             console.log('GET', data);
+            console.log(data.searchParams.get('id'));
             callback(200, { received: true });
             break;
         case Methods.delete:
