@@ -68,23 +68,34 @@ handlers.teamMembers = async (data: Payload, callback) => {
       }
       break;
     case Methods.get:
-      let id = data.searchParams.get('id');
-      id = id && typeof id === 'string' ? id : null;
-      if (id) {
-        let teamMember = await teamMembers.read(id);
-        if (teamMember) {
-          delete teamMember._id;
-          callback(200, teamMember);
+      {
+        let id = data.searchParams.get('id');
+        id = id && typeof id === 'string' ? id : null;
+        if (id) {
+          let teamMember = await teamMembers.read(id);
+          if (teamMember) {
+            delete teamMember._id;
+            callback(200, teamMember);
+          } else {
+            callback(404, { Error: 'Entity ID not found' });
+          }
         } else {
-          callback(404, { Error: 'Entity ID not found' });
+          callback(400, { Error: 'Missing required fields' });
         }
-      } else {
-        callback(400, { Error: 'Missing required fields' });
       }
       break;
     case Methods.delete:
-      console.log('DELETE', data);
-      callback(200, { received: true });
+      {
+        console.log('DELETE', data);
+        let id = data.searchParams.get('id');
+        id = id && typeof id === 'string' ? id : null;
+        const isDeleted = await teamMembers.delete(id);
+        if (isDeleted) {
+          callback(200, {});
+        } else {
+          callback(500, { Error: 'Could not delete ' + id });
+        }
+      }
       break;
     default:
       console.log('Unsupported method', data.method);

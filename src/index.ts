@@ -46,7 +46,7 @@ const server = https.createServer(
     ) => void = router[path];
 
     req.on('end', () => {
-      body = JSON.parse(body);
+      body = body && JSON.parse(body);
       const payload = {
         body,
         method,

@@ -46,7 +46,7 @@ var Methods;
 })(Methods || (Methods = {}));
 var handlers = {};
 handlers.teamMembers = function (data, callback) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, body, firstName, lastName, programId, title, organization, shortBio, linkedinLink, newTeamMember, isCreated, id, teamMember;
+    var _a, body, firstName, lastName, programId, title, organization, shortBio, linkedinLink, newTeamMember, isCreated, id, teamMember, id, isDeleted;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -56,7 +56,7 @@ handlers.teamMembers = function (data, callback) { return __awaiter(_this, void 
                     case Methods.get: return [3 /*break*/, 5];
                     case Methods.delete: return [3 /*break*/, 9];
                 }
-                return [3 /*break*/, 10];
+                return [3 /*break*/, 11];
             case 1:
                 body = data.body;
                 firstName = body.firstName && typeof body.firstName === 'string'
@@ -94,7 +94,7 @@ handlers.teamMembers = function (data, callback) { return __awaiter(_this, void 
             case 3:
                 callback(400, { Error: 'Missing required fields' });
                 _b.label = 4;
-            case 4: return [3 /*break*/, 11];
+            case 4: return [3 /*break*/, 12];
             case 5:
                 id = data.searchParams.get('id');
                 id = id && typeof id === 'string' ? id : null;
@@ -113,16 +113,26 @@ handlers.teamMembers = function (data, callback) { return __awaiter(_this, void 
             case 7:
                 callback(400, { Error: 'Missing required fields' });
                 _b.label = 8;
-            case 8: return [3 /*break*/, 11];
+            case 8: return [3 /*break*/, 12];
             case 9:
                 console.log('DELETE', data);
-                callback(200, { received: true });
-                return [3 /*break*/, 11];
+                id = data.searchParams.get('id');
+                id = id && typeof id === 'string' ? id : null;
+                return [4 /*yield*/, teamMembers.delete(id)];
             case 10:
+                isDeleted = _b.sent();
+                if (isDeleted) {
+                    callback(200, {});
+                }
+                else {
+                    callback(500, { Error: 'Could not delete ' + id });
+                }
+                return [3 /*break*/, 12];
+            case 11:
                 console.log('Unsupported method', data.method);
                 callback(405, {});
-                _b.label = 11;
-            case 11: return [2 /*return*/];
+                _b.label = 12;
+            case 12: return [2 /*return*/];
         }
     });
 }); };

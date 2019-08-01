@@ -34,7 +34,7 @@ var server = https.createServer(options, function (req, res) {
     });
     var handler = router[path];
     req.on('end', function () {
-        body = JSON.parse(body);
+        body = body && JSON.parse(body);
         var payload = {
             body: body,
             method: method,
