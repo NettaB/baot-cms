@@ -67,7 +67,7 @@ var createOne = function (collectionName) { return function (item) { return __aw
                     .then(function (result) { return true; })
                     .catch(function (err) {
                     //TODO: what is the correct way to do error handling here?
-                    console.error('ERROR:\n', err);
+                    console.error('DB ERROR:\n', err);
                     return false;
                 })];
             case 1:
@@ -82,10 +82,11 @@ var readOne = function (collectionName) { return function (id) { return __awaite
         switch (_a.label) {
             case 0: return [4 /*yield*/, baotDB
                     .collection(collectionName)
+                    //TODO: findOne is depcrecated. change to find, and return first element
                     .findOne({ id: id })
                     .then(function (result) { return result; })
                     .catch(function (err) {
-                    console.error('ERROR:\n', err);
+                    console.error('DB ERROR:\n', err);
                     return false;
                 })];
             case 1:
@@ -94,10 +95,46 @@ var readOne = function (collectionName) { return function (id) { return __awaite
         }
     });
 }); }; };
-var updateOne = function () { };
-var deleteOne = function () { };
+var updateOne = function (collectionName) { return function (id, updatedValue) { return __awaiter(_this, void 0, void 0, function () {
+    var response;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, baotDB
+                    .collection(collectionName)
+                    .updateOne({ id: id }, { $set: updatedValue })
+                    .then(function (result) { return result; })
+                    .catch(function (err) {
+                    console.error('DB ERROR:\n', err);
+                    return false;
+                })];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response];
+        }
+    });
+}); }; };
+var deleteOne = function (collectionName) { return function (id) { return __awaiter(_this, void 0, void 0, function () {
+    var response;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, baotDB
+                    .collection(collectionName)
+                    .deleteOne({ id: id })
+                    .then(function (result) { return true; })
+                    .catch(function (err) {
+                    console.error('DB ERROR:\n', err);
+                    return false;
+                })];
+            case 1:
+                response = _a.sent();
+                return [2 /*return*/, response];
+        }
+    });
+}); }; };
 module.exports = {
     init: init,
     readOne: readOne,
-    createOne: createOne
+    createOne: createOne,
+    updateOne: updateOne,
+    deleteOne: deleteOne
 };

@@ -36,7 +36,7 @@ const createOne = (collectionName: CollectionNames) => async (
     .then((result: any) => true)
     .catch((err: Error) => {
       //TODO: what is the correct way to do error handling here?
-      console.error('ERROR:\n', err);
+      console.error('DB ERROR:\n', err);
       return false;
     });
   return response;
@@ -45,21 +45,47 @@ const createOne = (collectionName: CollectionNames) => async (
 const readOne = (collectionName: CollectionNames) => async (id: string) => {
   let response = await baotDB
     .collection(collectionName)
+    //TODO: findOne is depcrecated. change to find, and return first element
     .findOne({ id })
     .then((result: any) => result)
     .catch((err: Error) => {
-      console.error('ERROR:\n', err);
+      console.error('DB ERROR:\n', err);
       return false;
     });
   return response;
 };
 
-const updateOne = () => {};
+const updateOne = (collectionName: CollectionNames) => async (
+  id: string,
+  updatedValue: {}
+) => {
+  let response = await baotDB
+    .collection(collectionName)
+    .updateOne({ id }, { $set: updatedValue })
+    .then((result: any) => result)
+    .catch((err: Error) => {
+      console.error('DB ERROR:\n', err);
+      return false;
+    });
+  return response;
+};
 
-const deleteOne = () => {};
+const deleteOne = (collectionName: CollectionNames) => async (id: string) => {
+  let response = await baotDB
+    .collection(collectionName)
+    .deleteOne({ id })
+    .then((result: any) => true)
+    .catch((err: Error) => {
+      console.error('DB ERROR:\n', err);
+      return false;
+    });
+  return response;
+};
 
 module.exports = {
   init,
   readOne,
-  createOne
+  createOne,
+  updateOne,
+  deleteOne
 };
