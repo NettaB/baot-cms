@@ -4,6 +4,7 @@ var https = require('https');
 var fs = require('fs');
 var router = require('./router');
 var passphrase = require('../https/passphrase');
+var db = require('./db');
 var options = {
     key: fs.readFileSync('./https/key.pem'),
     cert: fs.readFileSync('./https/cert.pem'),
@@ -53,5 +54,6 @@ var server = https.createServer(options, function (req, res) {
     // });
 });
 server.listen('8000', function () {
+    db.init();
     console.log('server is now listening on port 8000');
 });

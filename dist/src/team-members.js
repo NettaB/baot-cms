@@ -1,7 +1,6 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var db_1 = require("./db");
-var createTeamMember = db_1.createOne('team');
+var db = require('./db');
 module.exports = {
-    create: createTeamMember
+    create: db.createOne('team'),
+    read: db.readOne('team')
 };

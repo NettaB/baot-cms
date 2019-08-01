@@ -24,7 +24,7 @@ interface Payload {
 
 const handlers: Handlers = {};
 
-handlers.teamMembers = (data: Payload, callback) => {
+handlers.teamMembers = async (data: Payload, callback) => {
   switch (data.method) {
     case Methods.post:
       const { body } = data;
@@ -45,7 +45,7 @@ handlers.teamMembers = (data: Payload, callback) => {
       //TODO: validate linkedinLink is a url;
       const linkedinLink =
         typeof body.linkedinLink === 'string' ? body.linkedinLink : null;
-
+      //TODO: should I check if a member by this name exists?
       if (firstName && lastName) {
         const newTeamMember = {
           id: uuidv4(),
@@ -57,17 +57,32 @@ handlers.teamMembers = (data: Payload, callback) => {
           shortBio,
           linkedinLink
         };
-        console.log('POST', newTeamMember);
-        teamMembers.create(newTeamMember);
-        callback(200, newTeamMember);
+        const isCreated = teamMembers.create(newTeamMember);
+        if (isCreated) {
+          callback(200, newTeamMember);
+        } else {
+          callback(500, { Error: 'Could not save to database' });
+        }
       } else {
         callback(400, { Error: 'Missing required fields' });
       }
       break;
     case Methods.get:
-      console.log('GET', data);
-      console.log(data.searchParams.get('id'));
-      callback(200, { received: true });
+      let id = data.searchParams.get('id');
+      id = id && typeof id === 'string' ? id : null;
+      if (id) {
+        let members = await teamMembers.read(id);
+        console.log('IN HANDLER\n', members, '\n********');
+        // if (teamMember) {
+        //   console.log('RETURNED VALUE');
+        //   console.log(teamMember);
+        //   callback(200, teamMember);
+        // } else {
+        //   callback(404, { Error: 'Entity ID not found' });
+        // }
+      } else {
+        callback(400, { Error: 'Missing required fields' });
+      }
       break;
     case Methods.delete:
       console.log('DELETE', data);

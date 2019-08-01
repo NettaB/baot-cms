@@ -5,6 +5,7 @@ const https = require('https');
 const fs = require('fs');
 const router = require('./router');
 const passphrase = require('../https/passphrase');
+const db = require('./db');
 
 const options = {
   key: fs.readFileSync('./https/key.pem'),
@@ -69,5 +70,6 @@ const server = https.createServer(
 );
 
 server.listen('8000', () => {
+  db.init();
   console.log('server is now listening on port 8000');
 });

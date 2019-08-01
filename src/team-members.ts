@@ -1,7 +1,6 @@
-import { createOne } from './db';
-
-const createTeamMember = createOne('team');
+const db = require('./db');
 
 module.exports = {
-  create: createTeamMember
+  create: db.createOne('team'),
+  read: db.readOne('team')
 };
