@@ -57,7 +57,7 @@ handlers.teamMembers = async (data: Payload, callback) => {
           shortBio,
           linkedinLink
         };
-        const isCreated = teamMembers.create(newTeamMember);
+        const isCreated = await teamMembers.create(newTeamMember);
         if (isCreated) {
           callback(200, newTeamMember);
         } else {
@@ -71,15 +71,13 @@ handlers.teamMembers = async (data: Payload, callback) => {
       let id = data.searchParams.get('id');
       id = id && typeof id === 'string' ? id : null;
       if (id) {
-        let members = await teamMembers.read(id);
-        console.log('IN HANDLER\n', members, '\n********');
-        // if (teamMember) {
-        //   console.log('RETURNED VALUE');
-        //   console.log(teamMember);
-        //   callback(200, teamMember);
-        // } else {
-        //   callback(404, { Error: 'Entity ID not found' });
-        // }
+        let teamMember = await teamMembers.read(id);
+        if (teamMember) {
+          delete teamMember._id;
+          callback(200, teamMember);
+        } else {
+          callback(404, { Error: 'Entity ID not found' });
+        }
       } else {
         callback(400, { Error: 'Missing required fields' });
       }

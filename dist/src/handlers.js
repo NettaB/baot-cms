@@ -46,17 +46,17 @@ var Methods;
 })(Methods || (Methods = {}));
 var handlers = {};
 handlers.teamMembers = function (data, callback) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, body, firstName, lastName, programId, title, organization, shortBio, linkedinLink, newTeamMember, isCreated, id, members;
+    var _a, body, firstName, lastName, programId, title, organization, shortBio, linkedinLink, newTeamMember, isCreated, id, teamMember;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _a = data.method;
                 switch (_a) {
                     case Methods.post: return [3 /*break*/, 1];
-                    case Methods.get: return [3 /*break*/, 2];
-                    case Methods.delete: return [3 /*break*/, 6];
+                    case Methods.get: return [3 /*break*/, 5];
+                    case Methods.delete: return [3 /*break*/, 9];
                 }
-                return [3 /*break*/, 7];
+                return [3 /*break*/, 10];
             case 1:
                 body = data.body;
                 firstName = body.firstName && typeof body.firstName === 'string'
@@ -70,52 +70,59 @@ handlers.teamMembers = function (data, callback) { return __awaiter(_this, void 
                 organization = typeof body.organization === 'string' ? body.organization : null;
                 shortBio = typeof body.shortBio === 'string' ? body.shortBio : null;
                 linkedinLink = typeof body.linkedinLink === 'string' ? body.linkedinLink : null;
-                //TODO: should I check if a member by this name exists?
-                if (firstName && lastName) {
-                    newTeamMember = {
-                        id: uuidv4(),
-                        firstName: firstName,
-                        lastName: lastName,
-                        programId: programId,
-                        title: title,
-                        organization: organization,
-                        shortBio: shortBio,
-                        linkedinLink: linkedinLink
-                    };
-                    isCreated = teamMembers.create(newTeamMember);
-                    if (isCreated) {
-                        callback(200, newTeamMember);
-                    }
-                    else {
-                        callback(500, { Error: 'Could not save to database' });
-                    }
+                if (!(firstName && lastName)) return [3 /*break*/, 3];
+                newTeamMember = {
+                    id: uuidv4(),
+                    firstName: firstName,
+                    lastName: lastName,
+                    programId: programId,
+                    title: title,
+                    organization: organization,
+                    shortBio: shortBio,
+                    linkedinLink: linkedinLink
+                };
+                return [4 /*yield*/, teamMembers.create(newTeamMember)];
+            case 2:
+                isCreated = _b.sent();
+                if (isCreated) {
+                    callback(200, newTeamMember);
                 }
                 else {
-                    callback(400, { Error: 'Missing required fields' });
+                    callback(500, { Error: 'Could not save to database' });
                 }
-                return [3 /*break*/, 8];
-            case 2:
+                return [3 /*break*/, 4];
+            case 3:
+                callback(400, { Error: 'Missing required fields' });
+                _b.label = 4;
+            case 4: return [3 /*break*/, 11];
+            case 5:
                 id = data.searchParams.get('id');
                 id = id && typeof id === 'string' ? id : null;
-                if (!id) return [3 /*break*/, 4];
+                if (!id) return [3 /*break*/, 7];
                 return [4 /*yield*/, teamMembers.read(id)];
-            case 3:
-                members = _b.sent();
-                console.log('IN HANDLER\n', members, '\n********');
-                return [3 /*break*/, 5];
-            case 4:
-                callback(400, { Error: 'Missing required fields' });
-                _b.label = 5;
-            case 5: return [3 /*break*/, 8];
             case 6:
-                console.log('DELETE', data);
-                callback(200, { received: true });
+                teamMember = _b.sent();
+                if (teamMember) {
+                    delete teamMember._id;
+                    callback(200, teamMember);
+                }
+                else {
+                    callback(404, { Error: 'Entity ID not found' });
+                }
                 return [3 /*break*/, 8];
             case 7:
+                callback(400, { Error: 'Missing required fields' });
+                _b.label = 8;
+            case 8: return [3 /*break*/, 11];
+            case 9:
+                console.log('DELETE', data);
+                callback(200, { received: true });
+                return [3 /*break*/, 11];
+            case 10:
                 console.log('Unsupported method', data.method);
                 callback(405, {});
-                _b.label = 8;
-            case 8: return [2 /*return*/];
+                _b.label = 11;
+            case 11: return [2 /*return*/];
         }
     });
 }); };
